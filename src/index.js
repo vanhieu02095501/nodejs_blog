@@ -3,12 +3,20 @@ const express = require('express');
 const morgan = require('morgan');
 const { engine } = require('express-handlebars'); // Đúng cú pháp
 const app = express();
-const port = 3001;
+const port = 3002;
+
+const route = require('./routes');
 
 
 // Cấu hình file tĩnh 
 
 app.use(express.static(path.join(__dirname,'public')));
+
+
+app.use(express.urlencoded({
+   extended:true
+}));// xử li dữ liệu dạng form
+app.use(express.json()); // xử lí dạng code js gửi lên
 
 
 // Setup the HTTP logger
@@ -26,16 +34,7 @@ app.engine('hbs', engine(
 app.set('view engine', 'hbs'); // Sửa 'set view' thành 'view engine'
 app.set('views', path.join(__dirname, 'resources\\views')); // Cấu hình đường dẫn đến thư mục views
 
-
-
-// Routes
-app.get('/', (req, res) => {
-   res.render('home'); // Render file `home.handlebars`
-});
-
-app.get('/news', (req, res) => {
-   res.render('news'); // Render file `home.handlebars`
-});
-
+// routes init
+route(app);
 // Start server
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
